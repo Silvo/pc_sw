@@ -1,0 +1,189 @@
+﻿<UserControl x:Class="pc_sw.SensorListView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        mc:Ignorable="d ignore"
+        xmlns:helpers="clr-namespace:pc_sw.Helpers"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+        xmlns:c="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WPF45"
+        d:DesignHeight="300" d:DesignWidth="260"
+        DataContext="{Binding SensorListVM, Source={StaticResource Locator}}"
+        Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <!--<Style
+                TargetType="{x:Type DataGridCell}">
+                <Setter
+                    Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate
+                            TargetType="{x:Type DataGridCell}">
+                            <Grid>
+                                <ContentPresenter
+                                    Margin="8 0 0 0"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}">
+                                </ContentPresenter>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>-->
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Gray"/>
+            <Style TargetType="{x:Type DataGridCell}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type DataGridCell}">
+                            <ControlTemplate.Resources>
+                                <Storyboard x:Key="SelectedOn">
+                                    <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="select_gradient" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                        <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="1" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                                <Storyboard x:Key="SelectedOff">
+                                    <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="select_gradient" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                        <SplineDoubleKeyFrame KeyTime="00:00:00.3000000" Value="0" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </ControlTemplate.Resources>
+                            <Border BorderBrush="Transparent" BorderThickness="0" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                <Grid>
+                                    <Rectangle x:Name="select_gradient" StrokeThickness="0" Opacity="0" IsHitTestVisible="False" Fill="Gray" Stroke="Transparent"/>
+                                    <ContentPresenter Margin="8 0 8 0" />
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="true">
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard x:Name="SelectedOff_BeginStoryboard" Storyboard="{StaticResource SelectedOff}" />
+                                    </Trigger.ExitActions>
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard Storyboard="{StaticResource SelectedOn}" />
+                                    </Trigger.EnterActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style
+                x:Key="{x:Type DataGridColumnHeader}"
+                TargetType="{x:Type DataGridColumnHeader}">
+                <Setter
+                    Property="HorizontalContentAlignment"
+                    Value="Right"/>
+                <Setter
+                    Property="FontSize"
+                    Value="18"/>
+                <Setter
+                    Property="Background"
+                    Value="White"/>
+                <Setter
+                    Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate
+                            TargetType="{x:Type DataGridColumnHeader}">
+                            <Grid>
+                                <ContentPresenter
+                                    Margin="0 5 0 5"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left" />
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="{x:Type DataGridRowHeader}">
+                <Setter Property="Width" Value="0"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </Style>
+            <helpers:IdToColorBrushConverter x:Key="IdConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Line X1="0" X2="255" Y1="31" Y2="31" Stroke="Black" Grid.ColumnSpan="3" Grid.RowSpan="4"/>
+        <DataGrid ItemsSource="{Binding Path=Sources}" HorizontalContentAlignment="Stretch" AutoGenerateColumns="False" SelectionMode="Single" CanUserResizeColumns="False" CanUserReorderColumns="False" CanUserDeleteRows="False" CanUserResizeRows="False" FontFamily="Segoe UI Semilight" BorderBrush="{x:Null}" Background="{x:Null}" GridLinesVisibility="None" FontSize="18" >
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="" Binding="{Binding Path=IsVisible, UpdateSourceTrigger=PropertyChanged}" Width="35" >
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Foreground" Value="{Binding Id, Converter={StaticResource IdConverter}}" />
+                            <Setter Property="BorderBrush" Value="{Binding Id, Converter={StaticResource IdConverter}}"/>
+                            <Setter Property="SnapsToDevicePixels" Value="true"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                        <BulletDecorator Background="Transparent">
+                                            <BulletDecorator.Bullet>
+                                                <Grid Width="17" Height="17">
+                                                    <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Foreground}" BorderThickness="2"/>
+                                                    <Rectangle x:Name="CheckMark" Width="17" Height="17" Stroke="{TemplateBinding Foreground}" Fill="{TemplateBinding Foreground}"/>
+                                                </Grid>
+                                            </BulletDecorator.Bullet>
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                                        </BulletDecorator>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="false" >
+                                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckMark"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                    <DataGridCheckBoxColumn.EditingElementStyle>
+                        <Style TargetType="CheckBox">
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="Background" Value="White" />
+                            <Setter Property="Foreground" Value="{Binding Id, Converter={StaticResource IdConverter}}" />
+                            <Setter Property="BorderBrush" Value="{Binding Id, Converter={StaticResource IdConverter}}"/>
+                            <Setter Property="SnapsToDevicePixels" Value="true"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                                        <BulletDecorator Background="Transparent">
+                                            <BulletDecorator.Bullet>
+                                                <Grid Width="17" Height="17">
+                                                    <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Foreground}" BorderThickness="2"/>
+                                                    <Rectangle x:Name="CheckMark" Width="17" Height="17" Stroke="{TemplateBinding Foreground}" Fill="{TemplateBinding Foreground}"/>
+                                                </Grid>
+                                            </BulletDecorator.Bullet>
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                                        </BulletDecorator>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="false" >
+                                                <Setter Property="Visibility" Value="Collapsed" TargetName="CheckMark"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGridCheckBoxColumn.EditingElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="Sensor" Binding="{Binding Name}" Width="2*"/>
+                <DataGridTextColumn Header="Daily avg" Binding="{Binding Average}" TextBlock.TextAlignment="Right" Width="*" FontFamily="Segoe UI Semilight" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <c:EventToCommand Command="{Binding SelectSensorCommand}" PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="pc_sw.GraphView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        xmlns:local="clr-namespace:pc_sw"
+        mc:Ignorable="d ignore"
+        xmlns:helpers="clr-namespace:pc_sw.Helpers"
+        d:DesignHeight="300" d:DesignWidth="300"
+        DataContext="{Binding GraphVM, Source={StaticResource Locator}}"
+        Background="White">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="75"/>
+        </Grid.RowDefinitions>
+        <local:TimeGraph ShowDataCursor="true" Grid.Row="0" Data="{Binding Data}"
+                         SelectedSource="{Binding SelectedSource}" Grid.RowSpan="2" Skip="1"/>
+    </Grid>
+</UserControl>

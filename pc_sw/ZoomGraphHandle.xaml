@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="pc_sw.ZoomGraphHandle"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ignore="http://www.ignore.com"
+        mc:Ignorable="d ignore"
+        x:Name="hostHandle"
+        d:DesignHeight="100" d:DesignWidth="50"
+        Loaded="hostHandle_Loaded"
+        SizeChanged="hostHandle_SizeChanged">
+    <UserControl.Resources>
+        <Style x:Key="zoomWindowLabelStyle">
+            <Setter Property="Control.Foreground" Value="Gray"/>
+            <Style.Triggers>
+                <Trigger Property="UIElement.IsMouseOver" Value="True">
+                    <Setter Property="Control.Cursor" Value="SizeWE" />
+                </Trigger>
+                <EventTrigger RoutedEvent="UIElement.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Duration="0:0:0.2" Storyboard.TargetProperty="Foreground.Color" To="Black" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Duration="0:0:0.4" Storyboard.TargetProperty="Foreground.Color" To="Gray" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Canvas>
+        <Label Name="label" Canvas.Left="0" Canvas.Top="0" Panel.ZIndex="1"
+            Content="{Binding ElementName=hostHandle, Path=LabelContent}"
+            Margin="{Binding ElementName=hostHandle, Path=LabelMargin}"
+            Foreground="{Binding ElementName=hostHandle, Path=Foreground}"
+            FontFamily="Segoe UI SemiLight"/>
+        <Line x:Name="line" StrokeThickness="3" Canvas.Left="0" Canvas.Top="20"
+            X1="0" X2="0" Y1="0" Y2="{Binding ElementName=hostHandle, Path=LineHeight}"    
+            Stroke="{Binding ElementName=hostHandle, Path=Foreground}"/>
+        <Line x:Name="mouseCaptureline" StrokeThickness="12" Canvas.Left="0" Canvas.Top="20"
+            X1="0" X2="0" Y1="0" Y2="{Binding ElementName=hostHandle, Path=LineHeight}"
+            Stroke="Transparent"/>
+    </Canvas>
+</UserControl>
